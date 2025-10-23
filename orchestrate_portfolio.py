@@ -115,7 +115,6 @@ def build_static(env):
     ensure_node(next_dir, env.get("SKIP_NPM_CI","").lower()=="true")
     if public_api: write_build_env(next_dir, public_api)
     run(["npm","run","build"], cwd=next_dir)
-    run(["npx","next","export"], cwd=next_dir)
     out = next_dir / "out"
     if not out.exists(): sys.exit("Build OK, but ./out not found. Ensure next.config.js has: output: 'export'")
     log(f"ok: built {out}")
