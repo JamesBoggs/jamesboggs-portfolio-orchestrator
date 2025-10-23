@@ -1,0 +1,182 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== Font ===== */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+/* ===== Base ===== */
+html, body {
+  @apply min-h-screen bg-black text-white font-poppins;
+}
+
+/* ===== Animations ===== */
+@keyframes rainbow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes pulse-glow {
+  0%, 100% { opacity: .8; }
+  50% { opacity: .4; }
+}
+.animate-pulse {
+  animation: pulse-glow 1.4s ease-in-out infinite;
+}
+
+/* ===== Shared Gradient ===== */
+:root {
+  --rgb-grad: linear-gradient(
+    270deg,
+    #81D8D0,
+    #6EE7B7,
+    #60A5FA,
+    #C084FC,
+    #F472B6,
+    #FCD34D,
+    #81D8D0
+  );
+}
+
+/* ===== Circuit Line (soft animated divider) ===== */
+.circuit-trace {
+  height: 2px;
+  width: 100%;
+  border-radius: 9999px;
+  background: var(--rgb-grad);
+  background-size: 400% 100%;
+  animation: rainbow 14s linear infinite;
+  filter: drop-shadow(0 0 8px rgba(129,216,208,0.35));
+}
+
+/* ===== Card Frames ===== */
+.circuit-frame {
+  position: relative;
+  padding: 1.5px;
+  border-radius: 1rem;
+  background: var(--rgb-grad);
+  background-size: 400% 400%;
+  animation: rainbow 14s linear infinite;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.circuit-inner {
+  display: block;
+  border-radius: inherit;
+  background-color: #0f172a;
+  position: relative;
+  transition: background 0.3s ease;
+}
+.circuit-frame:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 0 20px rgba(129,216,208,0.15),
+    0 0 40px rgba(129,216,208,0.05);
+}
+.circuit-inner:hover {
+  background-color: #162240;
+}
+
+/* ===== Status Badges ===== */
+.badge {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 9999px;
+  display: inline-block;
+  box-shadow: 0 0 0 0.15rem rgba(0, 0, 0, 0.3);
+}
+.badge.online {
+  background-color: #22c55e;
+  animation: pulse-green 1.5s infinite;
+}
+.badge.beta {
+  background-color: #facc15;
+  animation: pulse-yellow 1.5s infinite;
+}
+.badge.offline {
+  background-color: #ef4444;
+  opacity: 0.6;
+}
+@keyframes pulse-green {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.6); }
+  50% { box-shadow: 0 0 0 4px rgba(34,197,94,0); }
+}
+@keyframes pulse-yellow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(250,204,21,0.6); }
+  50% { box-shadow: 0 0 0 4px rgba(250,204,21,0); }
+}
+
+/* ===== Dashboard Background ===== */
+.bg-dashboard {
+  background:
+    radial-gradient(40% 60% at 60% 10%, rgba(129,216,208,.08), transparent 60%),
+    radial-gradient(30% 40% at 10% 90%, rgba(99,102,241,.08), transparent 60%),
+    #0b1020;
+  color: white;
+}
+
+/* ===== Sidebar: Frosted Glow ===== */
+.glow-sidebar {
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(20px) saturate(160%);
+  background: rgba(255, 255, 255, 0.06);
+  border-right: 1px solid rgba(129, 216, 208, 0.25);
+}
+.glow-sidebar::before,
+.glow-sidebar::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.25;
+  mix-blend-mode: screen;
+  animation: sidebar-lava 55s infinite ease-in-out alternate;
+  z-index: 0;
+}
+.glow-sidebar::before {
+  width: 80vmax;
+  height: 80vmax;
+  top: -30vmax;
+  left: -25vmax;
+  background: radial-gradient(circle, rgba(129,216,208,0.8) 0%, transparent 70%);
+}
+.glow-sidebar::after {
+  width: 60vmax;
+  height: 60vmax;
+  bottom: -25vmax;
+  right: -20vmax;
+  background: radial-gradient(circle, rgba(180,255,245,0.8) 0%, transparent 70%);
+  animation-delay: 10s;
+}
+@keyframes sidebar-lava {
+  0%   { transform: translate(0%, 0%) scale(1); }
+  25%  { transform: translate(8%, -5%) scale(1.05); }
+  50%  { transform: translate(-5%, 10%) scale(1.08); }
+  75%  { transform: translate(6%, 3%) scale(0.97); }
+  100% { transform: translate(-6%, -8%) scale(1); }
+}
+.glow-sidebar > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* ===== Charts ===== */
+.recharts-tooltip-wrapper {
+  font-size: 11px;
+  background-color: rgba(17, 24, 39, 0.9);
+  color: white;
+  border: 1px solid rgba(129, 216, 208, 0.3);
+  border-radius: 6px;
+  padding: 4px 6px;
+}
+pre {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(129,216,208,0.2) transparent;
+}
+pre::-webkit-scrollbar {
+  height: 4px;
+}
+pre::-webkit-scrollbar-thumb {
+  background: rgba(129,216,208,0.3);
+  border-radius: 2px;
+}
