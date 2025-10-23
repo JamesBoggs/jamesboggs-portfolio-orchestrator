@@ -48,9 +48,5 @@ jobs:
         run: npm run build
         working-directory: ./site
 
-      - name: Export static site
-        run: npx next export
-        working-directory: ./site
-
       - name: Deploy via orchestrator
         run: python orchestrate_portfolio.py all
