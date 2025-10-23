@@ -1,7 +1,21 @@
 #!/usr/bin/env python3
 import os, sys, subprocess, json, time, mimetypes, argparse
 from pathlib import Path
+import os
+import boto3
 
+aws_id = os.environ.get("AWS_ACCESS_KEY_ID")
+aws_secret = os.environ.get("AWS_SECRET_ACCESS_KEY")
+
+if not aws_id or not aws_secret:
+    raise RuntimeError("AWS credentials are missing from environment variables!")
+
+s3 = boto3.client(
+    "s3",
+    aws_access_key_id=aws_id,
+    aws_secret_access_key=aws_secret,
+    region_name=os.environ.get("AWS_REGION", "us-east-2")
+)
 try:
     from dotenv import load_dotenv
 except Exception:
