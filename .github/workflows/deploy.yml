@@ -40,12 +40,17 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install Node.js deps and build/export
-        working-directory: ${{ env.NEXTJS_DIR }}
-        run: |
-          npm ci
-          npm run build
-          npx next export
+      - name: Install Node.js deps
+        run: npm ci
+        working-directory: ./site
+
+      - name: Build Next.js site
+        run: npm run build
+        working-directory: ./site
+
+      - name: Export static site
+        run: npx next export
+        working-directory: ./site
 
       - name: Deploy via orchestrator
         run: python orchestrate_portfolio.py all
