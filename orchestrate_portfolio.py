@@ -1,33 +1,19 @@
 #!/usr/bin/env python3
 import os, sys, subprocess, json, time, mimetypes, argparse
 from pathlib import Path
-import os
-import boto3
 
-aws_id = os.environ.get("AWS_ACCESS_KEY_ID")
-aws_secret = os.environ.get("AWS_SECRET_ACCESS_KEY")
-
-if not aws_id or not aws_secret:
-    raise RuntimeError("AWS credentials are missing from environment variables!")
-
-s3 = boto3.client(
-    "s3",
-    aws_access_key_id=aws_id,
-    aws_secret_access_key=aws_secret,
-    region_name=os.environ.get("AWS_REGION", "us-east-2")
-)
 try:
     from dotenv import load_dotenv
-except Exception:
+except ImportError:
     load_dotenv = None
 try:
     import boto3
     from botocore.exceptions import ClientError
-except Exception:
+except ImportError:
     boto3 = None
 try:
     import requests
-except Exception:
+except ImportError:
     requests = None
 
 def log(msg): print(msg, flush=True)
@@ -50,6 +36,7 @@ def load_env():
         "FORECAST_API_BASE","MONTE_API_BASE","PORTFOLIO_API_BASE",
         "NEXT_PUBLIC_PORTFOLIO_API",
         "AWS_REGION","S3_BUCKET","S3_PREFIX","CLOUDFRONT_DISTRIBUTION_ID",
+        "AWS_ACCESS_KEY_ID","AWS_SECRET_ACCESS_KEY",
         "DRY_RUN","SKIP_NPM_CI"
     ]}
     return env
@@ -149,13 +136,17 @@ def guess_headers(path: Path):
 def s3_upload_dir(env, out_dir: Path):
     if not boto3:
         raise SystemExit("boto3 not installed: python3 -m pip install boto3")
-    s3 = boto3.client("s3", region_name=env["AWS_REGION"] or "us-east-1")
+    s3 = boto3.client(
+        "s3",
+        aws_access_key_id=env["AWS_ACCESS_KEY_ID"],
+        aws_secret_access_key=env["AWS_SECRET_ACCESS_KEY"],
+        region_name=env["AWS_REGION"] or "us-east-1"
+    )
     bucket = env["S3_BUCKET"]
     prefix = (env["S3_PREFIX"] or "").strip("/")
     if not bucket: sys.exit("S3_BUCKET missing in .env")
     dry = env.get("DRY_RUN","").lower()=="true"
 
-    # ensure bucket exists
     try:
         s3.head_bucket(Bucket=bucket)
         log(f"bucket exists: s3://{bucket}")
@@ -190,7 +181,11 @@ def cf_invalidate(env):
         return
     if not boto3:
         raise SystemExit("boto3 not installed: python3 -m pip install boto3")
-    cf = boto3.client("cloudfront")
+    cf = boto3.client(
+        "cloudfront",
+        aws_access_key_id=env["AWS_ACCESS_KEY_ID"],
+        aws_secret_access_key=env["AWS_SECRET_ACCESS_KEY"]
+    )
     caller = str(int(time.time()))
     if env.get("DRY_RUN","").lower()=="true":
         log(f"[DRY] CloudFront invalidate {dist} /*")
