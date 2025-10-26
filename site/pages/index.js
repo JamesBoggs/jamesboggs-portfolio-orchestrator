@@ -1,9 +1,8 @@
-// pages/index.js
-+ const ENDPOINTS = {
-+   montecarlo: "https://montecarlo-fastapi.onrender.com/montecarlo/status",
-+   forecast:   "https://forecast-fastapi.onrender.com/forecast/status",
-+ };
-
+- const ENDPOINTS = {
+-   montecarlo: "https://montecarlo-fastapi.onrender.com/montecarlo/status",
+-   forecast:   "https://forecast-fastapi.onrender.com/forecast/status",
+- };
++ const ENDPOINTS = config.endpoints;
 useEffect(() => {
   const fetchCard = async (name, path) => {
     const t0 = performance.now();
