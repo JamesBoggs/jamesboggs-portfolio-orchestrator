@@ -1,0 +1,10 @@
+{
+  "endpoints": {
+    "montecarlo": "https://montecarlo-fastapi.onrender.com/montecarlo/status",
+    "forecast": "https://forecast-fastapi.onrender.com/forecast/status"
+  },
+  "corsAllowedOrigins": [
+    "https://jamesboggs.online",
+    "https://www.jamesboggs.online"
+  ]
+}
